@@ -1,0 +1,32 @@
+﻿@model LoginModel
+
+@{
+    Layout = "_RegisterLoginLayout";
+
+}
+
+<div class="text-danger" asp-validation-summary="All"></div>
+
+<form asp-action="Login" asp-controller="Account" method="post">
+    
+    <h2 >Login</h2>
+    <hr/>
+
+    <input asp-for="Email" class="form-control" placeholder="Email" required autofocus />
+    <label asp-for="Email" class="sr-only">Email</label>
+
+    <label asp-for="Password" class="sr-only">Password</label>
+    <input asp-for="Password" class="form-control" placeholder="Password" required autofocus />
+
+    <div class="checkbox mb-3">
+        <label>
+            <input type="checkbox" value="remember-me"> Remember me
+        </label>
+    </div>
+
+    <button class="mb-3 btn btn-primary btn-lg btn-block" type="submit">Sign in</button>
+    <hr />
+    <img class="mt-3" src="~/img/logo.png" />
+</form>
+
+

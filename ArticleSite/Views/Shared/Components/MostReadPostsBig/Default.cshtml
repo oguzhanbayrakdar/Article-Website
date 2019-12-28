@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Article>
+<div class="row">
+    <div class="col-md-12">
+        <div class="section-title">
+            <h2>Most Read</h2>
+        </div>
+    </div>
+    @foreach (var article in Model)
+    {
+        <!-- post -->
+        <div class="col-md-12">
+            <div class="post post-row">
+                <a class="post-img" asp-controller="Home" asp-action="Article" asp-route-id="@article.Id"><img src="~/img/post-1.jpg" alt=""></a>
+                <div class="post-body">
+                    <div class="post-meta">
+                        @foreach (var at in article.ArticlesTags)
+                        {
+                            <a class="post-category cat-2" asp-action="CategoryArticle" asp-route-id="@at.Tag.Id" asp-controller="Home">@at.Tag.Name</a>
+                        }
+                        <span class="post-date">@article.AddingDate.ToLongDateString()</span>
+                    </div>
+                    <h3 class="post-title"><a asp-controller="Home" asp-action="Article" asp-route-id="@article.Id">@article.Name</a></h3>
+                    <p>
+                        @if (article.Text.Length < 200)
+                        {
+                            @article.Text
+                        }
+                        else {
+
+                            @article.Text.Substring(0, 200)
+                        }...
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- /post -->
+    }
+</div>

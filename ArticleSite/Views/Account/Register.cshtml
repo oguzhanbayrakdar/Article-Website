@@ -1,0 +1,26 @@
+﻿@model RegisterModel
+@{
+    Layout = "_RegisterLoginLayout";
+}
+
+
+<form asp-action="Register" method="post">
+    <div class="text-danger" asp-validation-summary="All"></div>
+
+    <img src="~/img/logo.png" class="mb-3" width="128px" />
+    <hr />
+    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+
+    <input class="form-control" asp-for="Email" placeholder="Email" required autofocus />
+
+    <input class="form-control" asp-for="UserName" placeholder="User Name" required autofocus />
+
+    <input class="form-control" asp-for="PhoneNumber" placeholder="Phone Number" required autofocus />
+
+    <input class="form-control" asp-for="Password" placeholder="Password" required autofocus />
+
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+
+    <p class="mt-5 mb-3 text-muted">© 2017-2019</p>
+
+</form>

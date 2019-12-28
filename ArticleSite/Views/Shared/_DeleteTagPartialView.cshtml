@@ -1,0 +1,38 @@
+﻿@*@model Tag*@
+<!--Delete Tag Modal-->
+<div class="modal fade" id="deleteTagModal" tabindex="-1" role="dialog" aria-labelledby="deleteTagModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteTagModalLabel">Delete Tag</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="deleteTagModalFormDiv" class="modal-body">
+
+                <form asp-controller="Admin" asp-action="DeleteTag" id="DeleteTagForm">
+                    @Html.AntiForgeryToken()
+
+                    <div class="text-danger" asp-validation-summary="All"></div>
+                    
+                    <div class="form-group alert alert-dark">
+                        <img src="img/icons/placeholder-icon.png" style="width: 48px;" id="deleteTagImage" />
+                        
+                        <div class="text-danger mt-3" id="tagDeleteInfoText"></div>
+                    </div>
+                    <!--TODO: Silme işlemi başarılı olursa, başarılı olduğuna dair text çıksın.  -->
+                    <!--TODO: Sildikten sonra postback olmayacağı için silinen alanı da ortadan kaldırsın. -->
+                    @*Are you sure to delete Model.Name tag?*@
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <img id="ajaxLoadingImage" src="~/ajaxloading.gif" style="display: none; width: 50px" />
+                        <button id="tagDeleteSubmit" type="submit" data-dismiss="modal" class="btn btn-danger ">Delete</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/Delete Tag Modal-->

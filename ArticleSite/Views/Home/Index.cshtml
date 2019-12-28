@@ -1,0 +1,156 @@
+﻿@model List<Article>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+</head>
+<body>
+
+    <!-- section -->
+    <div class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                @foreach (var featuredArticles in Model)
+                {
+                    if (featuredArticles.IsFeatured)
+                    {
+                        <!-- post -->
+                        <div class="col-md-6">
+                            <div class="post post-thumb">
+                                <a class="post-img" asp-action="Article" asp-route-id="@featuredArticles.Id"><img src="~/img/post-1.jpg" alt=""></a>
+                                <div class="post-body">
+                                    <div class="post-meta">
+                                        @foreach (var at in featuredArticles.ArticlesTags)
+                                        {
+                                            <a class="post-category cat-2" asp-action="CategoryArticle" asp-route-id="@at.Tag.Id">@at.Tag.Name</a>
+
+                                        }
+                                        <span class="post-date">@featuredArticles.AddingDate.ToLongDateString()</span>
+                                    </div>
+                                    <h3 class="post-title"><a asp-action="Article" asp-route-id="@featuredArticles.Id">@featuredArticles.Name</a></h3>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /post -->
+                    }
+                }
+
+
+            </div> <!--Featured Posts-->
+            <!-- /row -->
+            <!-- row -->
+            @await Component.InvokeAsync("RecentPosts") <!--Recent Posts-->
+            <!-- /row -->
+            <!-- row -->
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="row">
+
+                        @{
+                            var count = Model.Count <= 6 ? Model.Count : 6;
+                        }
+
+                        @for (int i = 0; i < count; i++)
+                        {
+                            if (i == 0)
+                            {
+                                <!-- post -->
+                                <div class="col-md-12">
+                                    <div class="post post-thumb">
+                                        <a class="post-img" asp-action="Article" asp-route-id="@Model[i].Id"><img src="~/img/post-2.jpg" alt=""></a>
+                                        <div class="post-body">
+                                            <div class="post-meta">
+                                                @foreach (var at in Model[i].ArticlesTags)
+                                                {
+                                                    <a class="post-category cat-4" asp-action="CategoryArticle" asp-route-id="@at.Tag.Id">@at.Tag.Name</a>
+                                                }
+                                                <span class="post-date">@Model[i].AddingDate.ToLongDateString()</span>
+                                            </div>
+                                            <h3 class="post-title"><a asp-action="Article" asp-route-id="@Model[i].Id">@Model[i].Name</a></h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /post -->
+                            }
+                            <!-- post -->
+                            <div class="col-md-6">
+                                <div class="post">
+                                    <a class="post-img" asp-action="Article" asp-route-id="@Model[i].Id"><img src="~/img/post-1.jpg" alt=""></a>
+                                    <div class="post-body">
+                                        <div class="post-meta">
+                                            @foreach (var at in Model[i].ArticlesTags)
+                                            {
+                                                <a class="post-category cat-4" asp-action="CategoryArticle" asp-route-id="@at.Tag.Id">@at.Tag.Name</a>
+                                            }
+                                            <span class="post-date">@Model[i].AddingDate.ToLongDateString()</span>
+                                        </div>
+                                        <h3 class="post-title"><a asp-action="Article" asp-route-id="@Model[i].Id">@Model[i].Name</a></h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /post -->
+
+                        }
+
+
+                        <div class="clearfix visible-md visible-lg"></div>
+
+                        <!-- /post -->
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <!-- post widget -->
+                    @await Component.InvokeAsync("MostReadPosts")
+                    <!-- /post widget -->
+                    <!-- post widget -->
+                    @await Component.InvokeAsync("FeaturedPosts", 3) <!--Featured Posts-->
+                    <!-- /post widget -->
+                    <!-- ad -->
+                    <div class="aside-widget text-center">
+                        <a href="#" style="display: inline-block;margin: auto;">
+                            <img class="img-responsive" src="~/img/ad-1.jpg" alt="">
+                        </a>
+                    </div>
+                    <!-- /ad -->
+                </div>
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /section -->
+
+    <!-- section -->
+    <div class="section section-grey">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <div class="col-md-8">
+                    @await Component.InvokeAsync("MostReadPostsBig")
+                </div>
+                <div class="col-md-4">
+                    @await Component.InvokeAsync("Tags")
+
+                </div>
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /section -->
+
+
+
+</body>
+</html>
+

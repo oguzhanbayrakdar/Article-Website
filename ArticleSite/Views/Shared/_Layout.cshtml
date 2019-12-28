@@ -1,0 +1,271 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<AppUser> UserManager
+@inject SignInManager<AppUser> SignInManager
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width"/>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>@ViewBag.Title</title>
+
+    <!-- Google font -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:700%7CNunito:300,600" rel="stylesheet">
+
+    <!-- Bootstrap -->
+
+    <link href="~/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Font Awesome Icon -->
+    <link href="~/css/font-awesome.min.css" rel="stylesheet"/>
+
+    <!-- Custom stylesheet -->
+    <link href="~/css/style.css" rel="stylesheet"/>
+   
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+<!-- Header -->
+
+<header id="header">
+    <!-- Nav -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white container" style ="border-bottom: gray 1px solid">
+        <a class="navbar-brand" asp-action="Index" asp-controller="Home">
+            <img src="~/img/logo.png" alt="">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            @await Component.InvokeAsync("TopMenuTags",new {count = 4})
+            
+
+            <form class="form-inline my-2 my-lg-0 mr-3" asp-action="SearchResults" asp-controller="Home" method="post">
+                <input class="form-control mr-sm-2" id="query" name="query" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+            @if (!SignInManager.IsSignedIn(User))
+            {
+                <a asp-action="Login" asp-controller="Account" class="btn btn-info mr-3">Login</a>
+                <a asp-action="Register" asp-controller="Account" class="btn btn-secondary mr-3">Register</a>
+
+            }
+            else
+            {
+                <div class="alert-success p-1 mr-3">Welcome, @UserManager.GetUserName(User)</div>
+                <form asp-action="Logout" asp-controller="Account" method="post">
+
+                    <button type="submit" class="btn btn-sm btn-danger">Sign Out</button>
+                </form>
+            }
+        </div>
+    </nav>
+    
+    <!-- /Nav -->
+</header>
+<!-- /Header -->
+
+<div>
+    @RenderBody()
+</div>
+
+<!-- Footer -->
+<footer id="footer">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-5">
+                <div class="footer-widget">
+                    <div class="footer-logo">
+                        <a href="index.html" class="logo">
+                            <img src="~/img/logo.png" alt="">
+                        </a>
+                    </div>
+                    <ul class="footer-nav">
+                        <li>
+                            <a href="#">Privacy Policy</a>
+                        </li>
+                        <li>
+                            <a href="#">Advertisement</a>
+                        </li>
+                    </ul>
+                    <div class="footer-copyright">
+                        <span>
+                            &copy; <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                            Copyright &copy;
+                            <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="footer-widget">
+                            <h3 class="footer-title">About Us</h3>
+                            <ul class="footer-links">
+                                <li>
+                                    <a href="about.html">About Us</a>
+                                </li>
+                                <li>
+                                    <a href="#">Join Us</a>
+                                </li>
+                                <li>
+                                    <a href="contact.html">Contacts</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    @*<div class="col-md-6">
+                        <div class="footer-widget">
+                            <h3 class="footer-title">Categories</h3>
+                            <ul class="footer-links">
+                                <li>
+                                    <a href="/Home/CategoryArticle/9218af13-a6f8-4eed-00e2-08d74c1b81c4">Javascript</a>
+                                </li>
+                                <li>
+                                    <a href="/Home/CategoryArticle/3d4232e0-6b43-4ad7-00e3-08d74c1b81c4">C#</a>
+                                </li>
+                                <li>
+                                    <a href="/Home/CategoryArticle/eac40b7f-5bb1-4865-00e4-08d74c1b81c4">ASP.Net Core</a>
+                                </li>
+                                <li>
+                                    <a href="/Home/CategoryArticle/aec1bba4-2a07-4c3f-00e5-08d74c1b81c4">ReactJS</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>*@
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="footer-widget">
+                    <h3 class="footer-title">Join our Newsletter</h3>
+                    <div class="footer-newsletter">
+                        <form>
+                            <input class="input" type="email" name="newsletter"  placeholder="Enter your email">
+                            <button class="newsletter-btn">
+                                <i class="fa fa-paper-plane"></i>
+                            </button>
+                        </form>
+                    </div>
+                    <ul class="footer-social">
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-facebook"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-google-plus"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-pinterest"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</footer>
+<!-- /Footer -->
+<!-- jQuery Plugins -->
+<script src="~/js/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="~/js/bootstrap.min.js"></script>
+<script src="~/js/main.js"></script>
+<script>
+    
+    var replyToInputDiv = document.getElementById("replyDivText");
+
+    var userCommentAreas = document.getElementsByName("userCommentArea");
+    var replyButton = document.getElementsByName("replyButton");
+
+    var commentText = document.getElementById("CommentText");
+    var replyToInput = document.getElementById("replyToInput");
+    var mainCommentId = document.getElementById("MainCommentId");
+    
+    for (var i = 0; i < replyButton.length; i++) {
+        let button = replyButton[i];
+        button.onclick = function () {
+            let buttonId = button.id.substr(4, button.id.length); // Button id'si "btn+comment.id" olduğu için substr işlemi yapılıyor.
+            window.location.href = window.location.href.substr(0, window.location.href.indexOf("#")) + "#leave-a-reply-section";
+
+            replyToInputDiv.innerHTML = buttonId;
+            replyToInput.value = buttonId;
+
+            //Main comment Id
+            var mainCommentIdVal;
+            if (button.childNodes[1] === undefined) {
+                mainCommentIdVal = null;
+            } else {
+                mainCommentIdVal = button.childNodes[1].innerHTML;
+            }
+            mainCommentId.value = mainCommentIdVal;
+            console.log(button);
+            console.log(mainCommentIdVal);
+            // /Main comment Id
+
+            for (var j = 0; j < userCommentAreas.length; j++) {
+                let userCommentArea = userCommentAreas[j];
+
+                if (buttonId === userCommentArea.id) {
+                    userCommentArea.style.backgroundColor = "#ffe8d6";
+                } else {
+                    userCommentArea.style.backgroundColor = "white";
+                }
+            }
+        }
+    }
+
+    function goToReply(inp) {
+
+        window.location.href = window.location.href.substr(0, window.location.href.indexOf("#")) + "#" + replyToInputDiv.innerHTML;
+        
+        for (var i = 0; i < userCommentAreas.length; i++) {
+            let userCommentArea = userCommentAreas[i];
+
+            if (replyToInputDiv.innerHTML === userCommentArea.id) {
+                userCommentArea.style.backgroundColor = "#ffe8d6";
+            } else {
+                userCommentArea.style.backgroundColor = "white";
+            }
+        }
+    }
+   
+    function clearReplyToId() {
+        replyToInputDiv.innerHTML = "";
+        replyToInput.value = null;
+        for (var i = 0; i < userCommentAreas.length; i++) {
+            userCommentAreas[i].style.backgroundColor = "white";
+        }
+    }
+</script>
+</body>
+</html>

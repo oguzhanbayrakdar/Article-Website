@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Tag>
+@{
+    ViewData["Title"] = "AllTags";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+</style>
+
+<div class="section section-grey">
+    <div class="container">
+
+        <div class="section-title text-center row">
+            <h2>Tags</h2>
+        </div>
+        <hr />
+        <div class="row">
+            @foreach (var tag in Model)
+            {
+                <div class="col-md-4">
+                    <div class="aside-widget">
+
+                        <div class="category-widget">
+                            <ul>
+                                <li>
+                                    <a asp-action="CategoryArticle" asp-route-id="@tag.Id" class="cat-1">
+                                        <img src="~/img/icons/@tag.IconName" />
+                                        @tag.Name
+                                        <span>@tag.ArticlesTags.Count</span>
+                                    </a>
+                                </li>
+
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            }
+           
+        </div>
+    </div>
+    </div>
+
+
+

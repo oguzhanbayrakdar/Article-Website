@@ -1,0 +1,123 @@
+﻿@model RoleModel
+@{
+    ViewData["Title"] = "EditRole";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+    <h2>
+        Edit
+        <span class="font-weight-bold text-danger">
+            @Model.RoleName
+        </span>
+
+    </h2>
+
+    <form asp-action="EditRole" method="post">
+
+        <input type="hidden" asp-for="Id" />
+
+        <input asp-for="RoleName" class="form-control-sm" style="width: 300px;" />
+
+        <button type="submit" class="btn btn-secondary">Save</button>
+
+    </form>
+
+    <hr />
+    <h2>Members</h2>
+    <br />
+    @if (ViewBag.Members.Count > 0)
+    {
+        <table class="table table-responsive-sm table-striped table-hover table-secondary">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone Number</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ViewBag.Members)
+                {
+                    <tr>
+                        <th scope="row"> @item.Id</th>
+                        <td>@item.UserName</td>
+                        <td>@item.Email</td>
+                        <td>@item.PhoneNumber</td>
+                        <td>
+                            <form method="post">
+                                <button asp-action="EditRoleRemoveMember"
+                                        asp-route-roleid="@Model.Id"
+                                        asp-route-addtoroleid="@item.Id"
+                                        type="submit"
+                                        class="btn btn-sm btn-danger">
+                                    Remove From
+                                    <span class="text-info font-weight-bold">
+                                        @Model.RoleName
+                                    </span>
+                                    Role
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-warning">This role hasn't any member.</div>
+    }
+
+    <hr />
+    <h2>Non Members</h2>
+    <br />
+    @if (ViewBag.NonMembers.Count > 0)
+    {
+        <table class="table table-responsive-sm table-striped table-hover table-secondary">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone Number</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ViewBag.NonMembers)
+                {
+                    <tr>
+                        <th scope="row"> @item.Id</th>
+                        <td>@item.UserName</td>
+                        <td>@item.Email</td>
+                        <td>@item.PhoneNumber</td>
+                        <td>
+                            <form method="post">
+                                <button asp-action="EditRoleAddMember" asp-route-roleid="@Model.Id"
+                                        asp-route-addtoroleid="@item.Id"
+                                        type="submit"
+                                        class="btn btn-sm btn-warning">
+                                    Add To
+                                    <span class="text-info font-weight-bold">
+                                        @Model.RoleName
+                                    </span>
+                                    Role
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-warning">Every member has this role.</div>
+    }
+</main>
+

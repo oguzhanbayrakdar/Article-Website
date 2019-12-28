@@ -1,0 +1,40 @@
+﻿@model Tag
+<!--Add Modal-->
+<div class="modal fade" id="addTagModal" tabindex="-1" role="dialog" aria-labelledby="addTagModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addTagModalLabel">Add New Tag</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="addTagModalFormDiv" class="modal-body">
+
+                <form asp-controller="Admin" asp-action="AddTag" id="AddTagForm" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+
+                    <div class="text-danger" asp-validation-summary="All"></div>
+                    
+                    <div class="form-group">
+                        <label asp-for="Name" class="col-form-label"></label>
+                        <input type="text" class="form-control" asp-for="Name" name="TagName" id="TagName"/>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label id="tagIcon" name="tagIcon" class="col-form-label">Tag Icon</label>
+                        <input  type="file" class="form-control" name="tagfile" id="tagfile"/>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" id="tagFormCloseButton" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <img id="ajaxLoadingImage" src="~/ajaxloading.gif" style="display: none; width: 50px"/>
+                        <button id="tagFormSubmit"  type="submit" class="btn btn-primary">Create</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/Add Modal-->

@@ -1,0 +1,64 @@
+﻿@model IEnumerable<Tag>
+<!-- ad -->
+<div class="aside-widget text-center">
+    <a href="#" style="display: inline-block;margin: auto;">
+        <img class="img-responsive" src="~/img/ad-1.jpg" alt="">
+    </a>
+</div>
+<!-- /ad -->
+<!-- catagories -->
+<div class="aside-widget">
+    <div class="section-title">
+        <h2>Tags</h2>
+    </div>
+    <div class="category-widget">
+        <ul>
+            @if (Model.Count() >= 4)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    <li>
+                        <a asp-route-id="@Model.ElementAt(i).Id" asp-action="CategoryArticle" asp-controller="Home" class="cat-@(i+1)">
+                            @Model.ElementAt(i).Name
+                            <span>@Model.ElementAt(i).ArticlesTags.Count</span>
+                        </a>
+                    </li>
+                }
+            }
+            else
+            {
+                for (int i = 0; i < Model.Count(); i++)
+                {
+                    <li>
+                        <a asp-route-id="@Model.ElementAt(i).Id" asp-action="CategoryArticle" asp-controller="Home" href="#" class="cat-@(i+1)">
+                            @Model.ElementAt(i).Name
+                            <span>@Model.ElementAt(i).ArticlesTags.Count</span>
+                        </a>
+                    </li>
+                }
+
+            }
+        </ul>
+    </div>
+</div>
+<!-- /catagories -->
+<!-- tags -->
+@if (Model.Count() > 4)
+{
+    <div class="aside-widget">
+        <div class="tags-widget">
+            <ul>
+                @for (int i = 4; i < Model.Count(); i++)
+                {
+                    <li>
+                        <a asp-route-id="@Model.ElementAt(i).Id" asp-action="CategoryArticle" asp-controller="Home">
+                            @Model.ElementAt(i).Name
+                        </a>
+                    </li>
+                }
+
+            </ul>
+        </div>
+    </div>
+    <!-- /tags -->
+}

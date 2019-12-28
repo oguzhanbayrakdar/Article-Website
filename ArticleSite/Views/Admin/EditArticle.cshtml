@@ -1,0 +1,69 @@
+﻿@model AddArticleModel
+@{
+    ViewData["Title"] = "EditArticle";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+
+    <h2>Edit @Model.Name</h2>
+    <hr />
+    <form asp-action="EditArticle" asp-controller="Admin" method="post">
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" asp-for="Id" />
+        @*<input type="hidden" asp-for="AddingDate" />*@ <!-- Model post metoda geçerken bu alanlar boş geçmesin diye yazıldı.-->
+
+        <div class="form-group">
+            <label asp-for="Id"> <kbd class="alert-secondary">ID</kbd></label>
+            <input type="text" class="form-control" asp-for="Id" disabled="disabled" placeholder="Article Id">
+        </div>
+
+        @*<div class="form-group">
+            <label asp-for="AddingDate"><kbd class="alert-secondary">FIRST ADDED DATE</kbd></label>
+            <input type="text" class="form-control" asp-for="AddingDate" disabled="disabled" placeholder="Article Adding Date">
+        </div>*@
+
+        <div class="form-group">
+            <label asp-for="Name"><kbd class="alert-secondary">NAME</kbd></label>
+            <input type="text" class="form-control" asp-for="Name" placeholder="Article Name">
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Text"><kbd class="alert-secondary">TEXT</kbd></label>
+            <textarea class="form-control" asp-for="Text" rows="5"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label id="TagsLabelId" name="TagsLabelName"><kbd class="alert-secondary">TAGS</kbd></label>
+            <br />
+            <div class="alert alert-info">
+                <h4>Tags current article has:</h4>
+                <hr />
+                
+                @foreach (var icon in ViewBag.CurrentTags)
+                {
+                    <img src="~/img/icons/@icon.IconName" width="64 px" title="@icon.IconName" />
+                    
+                    <kbd>@icon.Name</kbd>
+                }
+               
+                <select asp-for="TagIds"
+                        asp-items="@(new SelectList(ViewBag.AllTags,"Id","Name"))">
+                    <option>Please select one</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="IsFeatured">
+                <kbd class="alert-secondary">IS FEATURED</kbd>
+            </label>
+            <input asp-for="IsFeatured" type="checkbox" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+
+    </form>
+
+</main>

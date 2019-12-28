@@ -1,0 +1,38 @@
+﻿@model List<Article>
+@{
+    ViewData["Title"] = "SearchResults";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="section mr-3 ml-3">
+
+    <h2>SearchResults</h2>
+    <div class="row justify-content-center">
+
+        @foreach (var item in Model)
+        {
+
+            <div class="card col-md-3 mr-3 ml-3 mt-3" style="width: 18rem;">
+                <img class="card-img-top" src="~/img/post-1.jpg" alt="Card image cap">
+                <div class="card-body">
+                    <a asp-action="Article" asp-route-id="@item.Id"><h5 class="card-title">@item.Name</h5></a>
+                    <p class="card-text">
+                        @foreach (var tag in item.ArticlesTags)
+                        {
+                            <img src="~/img/icons/@tag.Tag.IconName" width="32px" title="@tag.Tag.Name" />
+                        }
+                    </p>
+                    <a asp-action="Article" asp-route-id="@item.Id" class="btn btn-primary">Go to Article</a>
+                </div>
+            </div>
+
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-danger">
+            Sorry but we couldn't find any related article to your query...
+        </div>
+    }
+</div>

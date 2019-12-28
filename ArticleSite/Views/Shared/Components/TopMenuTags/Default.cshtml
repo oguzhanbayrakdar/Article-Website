@@ -1,0 +1,32 @@
+﻿@using System.Drawing
+@model System.Collections.Generic.List<ArticleSite.Models.Tag>
+
+<ul class="navbar-nav mr-auto" style="border-left: black 1px solid; padding-left: 10px;">
+    @*<li class="nav-item active">
+        <a class="nav-link">Home <span class="sr-only">(current)</span></a>
+    </li>*@
+    
+    @{List<Color> colors = new List<Color>
+      {
+          Color.Blue,
+          Color.BlueViolet,
+          Color.Coral,
+          Color.CornflowerBlue,
+          Color.OrangeRed,
+          Color.LawnGreen,
+          Color.Crimson,
+          Color.CadetBlue,
+          Color.DarkCyan,
+          Color.DarkGray
+      };
+    }
+
+    @foreach (var tag in Model)
+    {
+        <li class="nav-item" style=" padding-right: 10px;">
+            <a class="nav-link" style="border-bottom: @(colors[Model.IndexOf(tag)].Name) 2px solid;"
+               asp-action="CategoryArticle" asp-controller="Home" asp-route-id="@tag.Id">@tag.Name</a>
+        </li>
+    }
+
+</ul>

@@ -1,0 +1,32 @@
+﻿@model RoleModel
+
+@{
+    ViewData["Title"] = "AddRole";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+
+    <div class="text-danger" asp-validation-summary="All"></div>
+
+    <h2>AddRole</h2>
+    <ul class="list-group">
+
+        @foreach (var role in ViewBag.Roles)
+        {
+            <li class="list-group-item">
+                <kbd class="alert alert-secondary"> @role.Name </kbd>
+                <a asp-route-id="@role.Id" class="btn btn-danger" style="float: right" asp-action="DeleteRole">Delete</a>
+                <a asp-route-id="@role.Id" class="btn btn-warning" style="float: right" asp-action="EditRole">Edit</a>
+            </li>
+        }
+
+    </ul>
+    <br/>
+    <hr/>
+    <div>
+        <form asp-action="AddRole" method="post">
+            <input class="form-control-sm" style="width: 300px;" placeholder="Add New Role" asp-for="RoleName"/>
+            <button class="btn btn-secondary" type="submit">Create</button>
+        </form>
+    </div>
+</main>

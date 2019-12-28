@@ -1,0 +1,99 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<AppUser> UserManager
+@inject SignInManager<AppUser> SignInManager
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Jekyll v3.8.5">
+    <title>Dashboard Template · Bootstrap</title>
+    <script src="https://cdn.ckeditor.com/ckeditor5/12.3.1/classic/ckeditor.js"></script>
+
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.12.0/build/alertify.min.js"></script>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.12.0/build/css/alertify.min.css"/>
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>tinymce.init({ selector: 'textarea' });</script>
+
+    <script src="~/js/jquery.min.js"></script>
+    <!-- Custom styles for this template -->
+    <script src="~/js/bootstrap.min.js"></script>
+    <link href="~/css/dashboard.css" rel="stylesheet">
+    <script src="~/js/dashboard.js"></script>
+    <link href="~/css/bootstrap.min.css" rel="stylesheet"/>
+
+</head>
+
+<body>
+
+
+<nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">@UserManager.GetUserName(User)</a>
+    <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+    <ul class="navbar-nav px-3">
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <li class="nav-item text-nowrap">
+                <form asp-action="Logout" asp-controller="Account" method="post">
+
+                    <button type="submit" class="btn btn-sm btn-danger">Sign Out</button>
+                </form>
+            </li>
+        }
+
+    </ul>
+</nav>
+
+<div class="container-fluid mt-4 mb-4">
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky" >
+                <ul class="nav flex-column">
+                    <li class="nav-item" style="margin-bottom: 50px;">
+                        
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " asp-action="AddRole" asp-controller="Admin">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                            Roles <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-action="Index" asp-controller="Admin">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-cart"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                            Articles &amp; Tags
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-action="AddArticle" asp-controller="Admin">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                            Add New Article
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        @RenderBody()
+
+
+    </div>
+
+</div>
+
+<script src="~/jquery-3.4.1.min.js"></script>
+<script src="~/jquery.validate.min.js"></script>
+<script src="~/jquery.validate.unobtrusive.min.js"></script>
+<script>window.jQuery ||
+    document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+
+@RenderSection("scripts", false)
+
+</body>
+</html>

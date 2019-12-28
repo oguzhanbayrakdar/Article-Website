@@ -1,0 +1,425 @@
+﻿@model AdminArticleTagModel
+@{
+    Layout = "_AdminLayout";
+}
+
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+
+    <a id="addTagModalButton" class="btn btn-primary" asp-controller="Admin" asp-action="AddTag"
+       data-toggle="modal" data-target="#addTagModal">Create New Tag</a>
+    <br />
+    <h2>Tags</h2>
+    <div class="table-responsive ">
+        <table class="table table-secondary table-striped table-sm">
+            <thead>
+                <tr>
+                    <th>#ID</th>
+                    <th>Icon</th>
+                    <th>Tag Name</th>
+                    <th>Related Article Count</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="tagsTableBody">
+
+                @foreach (var tag in Model.Tags)
+                {
+                    <tr>
+                        <td>@tag.Id</td>
+                        <td>
+                            <img src="img/icons/@tag.IconName" width="32" height="32" />
+                        </td>
+                        <td>
+                            @tag.Name
+                        </td>
+                        <td>
+                            @tag.ArticlesTags.Count(c => c.Tag.Id == tag.Id)
+                        </td>
+                        <td>
+                            <a data-edittagid="@tag.Id" data-icon="@tag.IconName" data-name="@tag.Name"
+                               data-target="#editTagModal" class="btn btn-warning btn-sm editTagOpenModalButton" data-toggle="modal">
+                                Edit
+                            </a>
+
+                            <a data-toggle="modal" data-target="#deleteTagModal"
+                               class="btn btn-danger btn-sm deleteTagOpenModalButton"
+                               data-tagid="@tag.Id" data-name="@tag.Name" data-icon="@tag.IconName">
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+
+    <hr />
+    <a class="btn btn-primary" asp-action="AddArticle" asp-controller="Admin">Create New Article</a>
+    <h2>Articles</h2>
+    <div class="table-responsive ">
+        <table class="table table-striped table-info table-sm">
+            <thead>
+                <tr>
+                    <th>#ID</th>
+                    <th>Article Name</th>
+                    <th>Tags</th>
+                    <th>Adding Date</th>
+                    <th>Latest Update</th>
+                    <th>Is Featured</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var article in Model.Articles)
+                {
+                    <tr>
+                        <td>@article.Id</td>
+                        <td>@article.Name</td>
+                        <td>
+                            @foreach (var tag in article.ArticlesTags)
+                            {
+                                <img src="img/icons/@tag.Tag.IconName" width="24px" alt="@tag.Tag.Name" title="@tag.Tag.Name" />
+                            }
+                        </td>
+                        <td>@article.AddingDate.ToShortDateString()</td>
+                        <td>
+                            @(article.LatestUpdateDate.Ticks > DateTime.MinValue.Ticks ?
+                                                               article.LatestUpdateDate.ToShortDateString() : "-")
+                        </td>
+                        <td>@article.IsFeatured</td>
+                        <td>
+                            <a asp-action="EditArticle" asp-controller="Admin" asp-route-id="@article.Id" class="btn btn-warning btn-sm">Edit</a>
+                            <a data-toggle="modal" data-target="#deleteArticleModal" data-id="@article.Id" data-name="@article.Name"
+                               class="btn btn-danger btn-sm deleteArticleOpenModalButton">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <hr />
+    </div>
+
+
+    @Html.Partial("_AddTagPartialView", new Tag())
+    @Html.Partial("_EditTagPartialView")
+    @Html.Partial("_DeleteTagPartialView")
+    @Html.Partial("_DeleteArticlePartialView")
+
+
+    @section scripts{
+
+        <script>
+            alertify.set('notifier','position', 'top-right');
+        </script>
+
+        <!--Delete Article Ajax-->
+        <script>
+            $(document).ready(function () {
+                var articleid;
+                
+                $(".deleteArticleOpenModalButton").click(function (event) {
+
+                    var button = $(event.relatedTarget);
+
+                    var name = "";
+
+                    name = $(this).data('name');
+                    articleid = $(this).data('id');
+
+                    var modal = $(this).data("target");
+
+                    var articleDeleteText = document.getElementById("articleDeleteInfoText");
+
+                    articleDeleteText.innerHTML = "Are you sure you want to delete the <kbd>" + name + "</kbd> article?";
+
+                });
+
+                $("#articleDeleteSubmit").click(function (event) {
+                    event.preventDefault();
+
+                    var form = $('#DeleteArticleForm')[0];
+
+                    var data = new FormData(form);
+                    data.append("Id", articleid);
+                    console.log(data);
+                    $.ajax({
+                        type: 'POST',
+                        url: 'admin/deletearticle',
+                        data: data,
+                        processData: false,
+                        contentType: false,
+                        beforeSend: function () {
+                            $("#ajaxLoadingImage").show();
+                        },
+                        complete: function () {
+                            console.log("complete: " + data);
+
+                            $("#ajaxLoadingImage").hide();
+                            $("#tagFormSubmit").prop("disabled", false);
+                        },
+                        success: function () {
+
+                            //$("#addTagInfoAlert").remove();
+                            //$("#addTagModalButton").prepend("<div id='addTagInfoAlert' class='alert alert-success'>"
+                            //    + $("#tagDeleteInfoText").val() + " has deleted successfully." + "</div>");
+                            location.reload();
+                        },
+                        error: function () {
+                            console.log("error: " + data);
+                            //$("#addTagInfoAlert").remove();
+
+                            //$("#addTagModalButton").prepend("<div id='addTagInfoAlert' class='alert alert-danger'> " +
+                            //    "The tag you tried to insert is already in the database.</div>");
+
+                        }
+                    });
+
+                });
+            });
+        </script>
+        <!--/Delete Article Ajax-->
+
+        <!--Delete Tag Ajax-->
+        <script>
+            $(document).ready(function () {
+                var tagid;
+
+                $(".deleteTagOpenModalButton").click(function (event) {
+
+                    var button = $(event.relatedTarget);
+
+                    var name = "";
+                    var icon = "";
+                    name = $(this).data('name');
+                    icon = $(this).data('icon');
+                    tagid = $(this).data('tagid');
+
+                    var modal = $(this).data("target");
+
+                    var tagDeleteText = document.getElementById("tagDeleteInfoText");
+
+                    tagDeleteText.innerHTML = "Are you sure you want to delete the <kbd>" + name + "</kbd> tag?";
+                    var image = document.getElementById("deleteTagImage");
+                    image.src = "img/icons/" + icon;
+                });
+
+                $("#tagDeleteSubmit").click(function (event) {
+                    event.preventDefault();
+
+                    var form = $('#DeleteTagForm')[0];
+
+                    var data = new FormData(form);
+                    data.append("Id", tagid);
+
+                    $.ajax({
+                        type: 'POST',
+                        url: 'admin/deletetag',
+                        data: data,
+                        processData: false,
+                        contentType: false,
+                        beforeSend: function () {
+                            $("#ajaxLoadingImage").show();
+                        },
+                        complete: function () {
+                            console.log("complete: " + data);
+
+                            $("#ajaxLoadingImage").hide();
+                            $("#tagFormSubmit").prop("disabled", false);
+                        },
+                        success: function () {
+
+                            alertify.success('The tag successfully deleted.');
+                            location.reload();
+                            //$("#addTagInfoAlert").remove();
+                            //$("#addTagModalButton").prepend("<div id='addTagInfoAlert' class='alert alert-success'>"
+                            //    + $("#tagDeleteInfoText").val() + " has deleted successfully." + "</div>");
+
+                        },
+                        error: function () {
+                            alertify.error('Some errors occurred while deleting the tag.');
+                            //$("#addTagInfoAlert").remove();
+
+                            //$("#addTagModalButton").prepend("<div id='addTagInfoAlert' class='alert alert-danger'> " +
+                            //    "The tag you tried to insert is already in the database.</div>");
+
+                        }
+                    });
+
+                });
+            });
+        </script>
+        <!--/Delete Tag Ajax-->
+
+        <!--Add Tag Ajax-->
+        <script>
+            $("#addTagModalButton").on('click',
+                function () {
+                    $("#addTagInfoAlert").remove();
+                }
+            );
+
+            $(document).ready(function () {
+
+                $("#tagFormSubmit").click(function (event) {
+
+                    //stop submit the form, we will post it manually.
+                    event.preventDefault();
+
+                    // Get form
+                    var form = $('#AddTagForm')[0];
+
+                    // Create an FormData object
+                    var data = new FormData(form);
+
+                    // If you want to add an extra field for the FormData
+                    data.append("Name", $("#TagName").val());
+
+                    var tagFile = $("#tagfile")[0].files[0];
+                    data.append("files", tagFile);
+
+                    // disabled the submit button
+                    $("#tagFormSubmit").prop("disabled", true);
+
+                    $.ajax({
+                        type: "POST",
+                        enctype: 'multipart/form-data',
+                        url: "/admin/addtag",
+                        data: data,
+                        processData: false,
+                        contentType: false,
+                        cache: false,
+                        timeout: 600000,
+                        beforeSend: function () {
+                            $("#ajaxLoadingImage").show();
+                            $("#tagFormSubmit").prop("disabled", true);
+
+                        },
+                        complete: function () {
+                            $("#ajaxLoadingImage").hide();
+                            $("#TagName").val('');
+                            $("#tagFormSubmit").prop("disabled", false);
+                        },
+                        success: function () {
+
+                            //$("#addTagInfoAlert").remove();
+                            $('#tagFormCloseButton').click();
+                            alertify.success('Tag added successfully!');
+                            location.reload();
+                            //$("#addTagModalFormDiv").prepend("<div id='addTagInfoAlert' class='alert alert-success'>" +
+                            //    $("#TagName").val() +
+                            //    " has added successfully." +
+                            //    "</div>");
+                            $("#tagFormSubmit").prop("disabled", false);
+                        },
+                        error: function () {
+                            //$("#addTagInfoAlert").remove();
+                            //$("#tagFormSubmit").prop("disabled", false);
+                            alertify.error('The tag you want to add has already been added.');
+                            //$("#addTagModalFormDiv").prepend("<div id='addTagInfoAlert' class='alert alert-danger'> " +
+                            //    "The tag you tried to insert is already in the database.</div>");
+
+                        }
+                    });
+
+                });
+
+            });
+
+
+        </script>
+        <!--/Add Tag Ajax-->
+
+        <!--Edit Tag Ajax-->
+        <script>
+            $(document).ready(function () {
+                var editTagId;
+                $(".editTagOpenModalButton").click(function () {
+                    var button = $(event.relatedTarget);
+
+                    var name = "";
+                    var icon = "";
+                    name = $(this).data('name');
+                    icon = $(this).data('icon');
+                    editTagId = $(this).data('edittagid');
+
+                    var modal = $(this).data("target");
+
+                    var editTagName = document.getElementById("EditTagName");
+
+                    document.getElementById("EditTagName").setAttribute('value', name);
+                    document.getElementById("EditTagId").setAttribute('value', editTagId);
+
+                    var image = document.getElementById("editModalImage");
+                    image.src = "img/icons/" + icon;
+
+                });
+
+                $("#EditTagFormSubmit").click(function (event) {
+
+                    event.preventDefault();
+
+                    var form = $('#EditTagForm')[0];
+                    var data = new FormData(form);
+
+                    var tagName = document.getElementById("EditTagName").getAttribute('value');
+
+
+                    data.append("editTagName", tagName);
+                    data.append("editTagId", editTagId);
+
+                    //file upload
+                    var editTagFile = $("#EditTagFile")[0].files[0];
+                    data.append("files", editTagFile);
+
+                    // disabled the submit button
+                    $("#EditTagFormSubmit").prop("disabled", true);
+
+                    $.ajax({
+                        type: "POST",
+                        enctype: 'multipart/form-data',
+                        url: "/admin/edittag",
+                        data: data,
+                        processData: false,
+                        contentType: false,
+                        cache: false,
+                        timeout: 600000,
+                        beforeSend: function () {
+                            $("#ajaxLoadingImage").show();
+                        },
+                        complete: function () {
+                            $("#ajaxLoadingImage").hide();
+                            $("#TagName").val('');
+                            $("#EditTagFormSubmit").prop("disabled", false);
+                        },
+                        success: function () {
+                            console.log(data);
+                            $("#addTagInfoAlert").remove();
+                            alertify.success('The tag successfully edited.');
+                            $('#editTagFormCloseButton').click();
+                            location.reload();
+                            //$("#addTagModalFormDiv").prepend("<div id='addTagInfoAlert' class='alert alert-success'>"
+                            //    + $("#TagName").val() + " has edited successfully." + "</div>");
+                            //$("#EditTagFormSubmit").prop("disabled", false);
+
+                            //TODO: Edit ve delete butonlarına da eklemeyi unutma.
+                        },
+                        error: function () {
+                            $("#addTagInfoAlert").remove();
+                            $("#tagFormSubmit").prop("disabled", false);
+                            alertify.error('Some errors occurred while editing the tag.');
+                            //$("#addTagModalFormDiv").prepend("<div id='addTagInfoAlert' class='alert alert-danger'> " +
+                            //    "The tag you tried to insert is already in the database.</div>");
+
+                        }
+                    });
+
+                });
+
+            });
+        </script>
+        <!--/Edit Tag Ajax-->
+    }
+
+</main>

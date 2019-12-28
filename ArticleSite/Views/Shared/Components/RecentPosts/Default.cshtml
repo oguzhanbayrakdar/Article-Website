@@ -1,0 +1,45 @@
+﻿@model List<Article>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="section-title">
+            <h2>Recent Posts</h2>
+        </div>
+    </div>
+
+    @for (int i = 0; i < 6; i++)
+    {
+        <!-- post -->
+        <div class="col-md-4">
+            <div class="post">
+                <a class="post-img" asp-action="Article" asp-route-id="@Model[i].Id" asp-controller="Home">
+                    <img src="~/img/post-@(i + 1).jpg" alt="">
+                </a>
+                <div class="post-body">
+                    <div class="post-meta">
+
+                        @foreach (var item in Model[i].ArticlesTags)
+                        {
+                            <a asp-route-id="@item.TagId" asp-action="CategoryArticle" asp-controller="Home" title="@item.Tag.Name">
+                                <img src="img/icons/@item.Tag.IconName" width="24" alt="@item.Tag.Name"/>
+                            </a>
+                        }
+                        <span class="post-date">@Model.ElementAt(i).AddingDate.ToShortDateString()</span>
+                    </div>
+                    <h3 class="post-title">
+                        <a asp-action="Article" asp-route-id="@Model[i].Id" asp-controller="Home">
+                            @Model.ElementAt(i).Name
+                        </a>
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+        if (i == 2)
+        {
+            <div class="clearfix visible-md visible-lg"></div>
+        }
+    }
+
+</div>

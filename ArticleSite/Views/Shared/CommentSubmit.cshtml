@@ -1,0 +1,62 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model Comment
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@inject UserManager<AppUser> UserManager
+@inject SignInManager<AppUser> SignInManager
+
+<div class="section-row" id="leave-a-reply-section">
+    <div class="section-title">
+        <h2>Leave a reply</h2>
+        <p>your email address will not be published. required fields are marked *</p>
+    </div>
+    <form class="post-reply" asp-action="AddComment" asp-controller="Home">
+        <input type="hidden" id="articleId" name="articleId" value="@Model.Article.Id" />
+        <input type="hidden" id="MainCommentId" name="MainCommentId" />
+
+        @if (!SignInManager.IsSignedIn(User))
+        {
+            <div class="row">
+                <div class="col-md-12 alert alert-warning">
+                    You must be logged in to post a comment.
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span>Username</span>
+                        <input class="input" type="text" name="name" disabled="" value="@UserManager.GetUserName(User)">
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <span>Reply To:</span>
+
+                        <div class="input" id="replyToInputDiv"  style="cursor: pointer">
+                            <span id="replyDivText" onclick="goToReply(this);"></span>
+                            <button class="btn btn-sm btn-danger" style="float: right;"
+                                    type="button" onclick="clearReplyToId()">
+                                <b>x</b>
+                            </button>
+                        </div>
+                       
+                        <input class="input" type="hidden" name="replyToInput" id="replyToInput" value="">
+
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <textarea class="input" name="CommentText" id="CommentText" placeholder="Message"></textarea>
+                    </div>
+                    <button type="submit" class="primary-button">Submit</button>
+                </div>
+            </div>
+        }
+    </form>
+</div>

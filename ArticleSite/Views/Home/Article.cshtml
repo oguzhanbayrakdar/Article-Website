@@ -1,0 +1,179 @@
+﻿@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Identity
+@model ArticleSite.ViewModels.ArticleCommentViewModel
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+@inject UserManager<AppUser> UserManager
+@inject SignInManager<AppUser> SignInManager
+
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <!-- Post content -->
+            <div class="col-md-8">
+                <div class="section-row sticky-container">
+                    <div class="main-post">
+                        <h2>@Model.Article.Name</h2>
+                        <hr />
+                        @Html.Raw(Model.Article.Text)
+
+                    </div>
+                    <div class="post-shares sticky-shares" style="position: fixed; top: 80px; left: 50px;">
+                        <a href="#" class="share-facebook"><i class="fa fa-facebook"></i></a>
+                        <a href="#" class="share-twitter"><i class="fa fa-twitter"></i></a>
+                        <a href="#" class="share-google-plus"><i class="fa fa-google-plus"></i></a>
+                        <a href="#" class="share-pinterest"><i class="fa fa-pinterest"></i></a>
+                        <a href="#" class="share-linkedin"><i class="fa fa-linkedin"></i></a>
+                        <a href="#"><i class="fa fa-envelope"></i></a>
+                    </div>
+                </div>
+
+                <!-- ad -->
+                <div class="section-row text-center">
+                    <a href="#" style="display: inline-block;margin: auto;">
+                        <img class="img-responsive" src="~/img/ad-2.jpg" alt="">
+                    </a>
+                </div>
+                <!-- ad -->
+                <!-- author -->
+                <div class="section-row">
+                    <div class="post-author">
+                        <div class="media">
+                            <div class="media-left">
+                                <img class="media-object" src="~/img/author.png" alt="">
+                            </div>
+                            <div class="media-body">
+                                <div class="media-heading">
+                                    <h3>John Doe</h3>
+                                </div>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <ul class="author-social">
+                                    <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /author -->
+                <!-- comments -->
+                <div class="section-row">
+                    <div class="section-title">
+                        <h2>@(Model.Comments.Count + ViewBag.Replies.Count) Comments</h2>
+                    </div>
+
+                    <div class="post-comments">
+                        <!-- comment -->
+                        @foreach (var comment in Model.Comments)
+                        {
+                            <div class="media mainCommentArea" name="userCommentArea" id="@comment.Id">
+                                <div class="media-left">
+                                    <img class="media-object" src="~/img/avatar.png" alt="">
+                                </div>
+                                <div class="media-body">
+                                    <div class="media-heading">
+                                        <h4>@comment.User.UserName</h4>
+                                        <span class="time">@comment.CommentTime</span>
+                                        <button class="reply btn btn-sm" id="btn @comment.Id" name="replyButton"
+                                                title="Reply To: @comment.Id comment by @comment.User.UserName">
+                                            Reply
+                                            <span style="display:none">@comment.Id</span>
+                                        </button>
+                                    </div>
+                                    <p>@comment.CommentText</p>
+
+                                    @foreach (var subComment in ViewBag.Replies)
+                                    {
+                                       
+                                        if (subComment.MainCommentId == comment.Id.ToString())
+                                        {
+                                            <!-- sub-comment -->
+                                            <div class="media" name="userCommentArea" id="@subComment.Id">
+                                                <div class="media-left">
+                                                    <img class="media-object" src="~/img/avatar.png" alt="">
+                                                </div>
+                                                <div class="media-body">
+                                                    <div class="media-heading">
+                                                        <h4>@subComment.User.UserName 
+                                                            [<span class="time mr-0">
+                                                                Reply To: <a href="#@subComment.ReplyTo.Id" style="color: red; text-decoration: underline" title="@subComment.ReplyTo.Id">@comment.User.UserName</a>
+                                                            </span>]
+                                                        </h4>
+                                                        
+                                                        <span class="time">@subComment.CommentTime</span>
+                                                        @*Yerleri değiştirme script previousSibling kullanıyor.*@
+                                                        <button class="reply btn btn-sm" id="btn @subComment.Id" name="replyButton"
+                                                                title="Click this to reply: @subComment.Id comment by @subComment.User.UserName">
+                                                            @*btn @comment.Id cevabın ana mesajı oluyor.*@
+                                                            Reply
+                                                            <span style="display: none" id="@subComment.Id">@comment.Id</span>
+                                                        </button>
+                                                    </div>
+                                                    <p>@subComment.CommentText</p>
+                                                </div>
+                                            </div>
+                                            <!-- /sub-comment -->
+                                        }
+                                        
+
+                                    }
+
+                                </div>
+                            </div>
+                        }
+
+                        <!-- /comment -->
+                    </div>
+                </div>
+                <!-- /comments -->
+                <!-- reply -->
+                @await Html.PartialAsync("CommentSubmit",model:new Comment{Article = Model.Article, ReplyTo = new Comment()})
+                <!-- /reply -->
+            </div>
+            <!-- /Post content -->
+            <!-- aside -->
+            <div class="col-md-4">
+                <!-- ad -->
+                <div class="aside-widget text-center">
+                    <a href="#" style="display: inline-block;margin: auto;">
+                        <img class="img-responsive" src="~/img/ad-1.jpg" alt="">
+                    </a>
+                </div>
+                <!-- /ad -->
+                <!-- post widget -->
+                @await Component.InvokeAsync("MostReadPosts")
+                <!-- /post widget -->
+                <!-- post widget -->
+                @await Component.InvokeAsync("FeaturedPosts")
+                <!-- /post widget -->
+                <!-- tags -->
+                @await Component.InvokeAsync("Tags")
+                <!-- /tags -->
+                <!-- archive -->
+                <div class="aside-widget">
+                    <div class="section-title">
+                        <h2>Archive</h2>
+                    </div>
+                    <div class="archive-widget">
+                        <ul>
+                            <li><a href="#">January 2018</a></li>
+                            <li><a href="#">Febuary 2018</a></li>
+                            <li><a href="#">March 2018</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- /archive -->
+            </div>
+            <!-- /aside -->
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
