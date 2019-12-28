@@ -1,5 +1,5 @@
 # Article-Website
-A website for your articles.
+A website for your articles. With ASP.Net Core and Jquery Ajax.
 
 # Features
 
